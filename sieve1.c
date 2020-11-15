@@ -86,13 +86,13 @@ int main (int argc, char *argv[])
            }
            else
            {   
-              /*
               first = (low_value / prime + 1) * prime;
               first = ((first - low_value) % 2) == 0 ? first : first + prime;
               //make sure first is odd
               first = (first - low_value) / 2;
-              */
+              /*
               first = (prime - (low_value % prime) + low_value / prime % 2 * prime) / 2;
+              */
            }   
        }
        for (i = first; i < size; i += prime) marked[i] = 1;
@@ -106,13 +106,13 @@ int main (int argc, char *argv[])
    for (i = 0; i < size; i++)
        if (!marked[i]) count++;
    if (p > 1)
-       MPI_Reduce(&count, &global_count, 1, MPI_INT, MPI_SUM,
-                  0, MPI_COMM_WORLD);
+       MPI_Reduce(&count, &global_count, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
-   /* Stop the timer */
+   global_count++;
    
+   /* Stop the timer */
+ 
    elapsed_time += MPI_Wtime();
-
 
    /* Print the results */
 
