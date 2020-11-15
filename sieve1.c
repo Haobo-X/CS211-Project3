@@ -86,10 +86,13 @@ int main (int argc, char *argv[])
            }
            else
            {   
+              /*
               first = (low_value / prime + 1) * prime;
               first = ((first - low_value) % 2) == 0 ? first : first + prime;
               //make sure first is odd
               first = (first - low_value) / 2;
+              */
+              first = (prime - (low_value % prime) + low_value / prime % 2 * prime) / 2;
            }   
        }
        for (i = first; i < size; i += prime) marked[i] = 1;
