@@ -106,8 +106,6 @@ int main (int argc, char *argv[])
        MPI_Reduce(&count, &global_count, 1, MPI_INT, MPI_SUM,
                   0, MPI_COMM_WORLD);
 
-   global_count++;
-   
    /* Stop the timer */
    
    elapsed_time += MPI_Wtime();
