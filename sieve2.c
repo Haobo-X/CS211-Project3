@@ -64,8 +64,10 @@ int main (int argc, char *argv[])
    high_value = high_value - (high_value + 1) % 2;
    
    size = (high_value - low_value) / 2 + 1;
-   local_prime_size = (int)sqrt((double)(n)) + 1;
-   local_prime_size = local_prime_size / 2 - 1;
+   
+   local_prime_size = (int)sqrt((double)(n)) - 1;
+   // local_prime_size = (int)sqrt((double)(n)) + 1;
+   // local_prime_size = local_prime_size / 2 - 1;
 
    /* Bail out if all the primes used for sieving are
       not all held by process 0 */
@@ -88,18 +90,20 @@ int main (int argc, char *argv[])
        MPI_Finalize();
        exit(1);
    }
-
-   for (i = 0; i < size; i++) marked[i] = 0;
-   for (i = 0; i < size; i++) local_prime_marked[i] = 0;
    
+   for (i = 0; i < local_prime_size; i++) local_prime_marked[i] = 0;
    index = 0;
-   prime = 3;
-   do {
-      for (i = (prime * 3 - 3) / 2; i < local_prime_size; i += prime) local_prime_marked[i] = 1;
-         while (local_prime_marked[++index]);
-         prime = 2 * index + 3;
-   } while (prime * prime <= n);
-
+   local_prime = 2;
+   do
+   {
+       local_first = local_prime * local_prime - 2;
+       for (i = local_first; i < local_prime_size; i += local_prime) local_prime_marked[i] = 1;
+       while (local_prime_marked[++index] == 1);
+       local_prime = 2 + index;
+   } while (local_prime * local_prime <= n);
+   
+   
+   for (i = 0; i < size; i++) marked[i] = 0;
    index = 0;
    prime = 3;
    do {
@@ -127,10 +131,10 @@ int main (int argc, char *argv[])
        for (i = first; i < size; i += prime) marked[i] = 1;
        //if (!id) {
        while (local_prime_marked[++index]);
-       prime = 2 * index + 3;
+       prime = index + 2;
        //}
        //if (p > 1) MPI_Bcast(&prime, 1, MPI_INT, 0, MPI_COMM_WORLD);
-   } while (prime * prime <= high_value); //high_value
+   } while (prime * prime <= n); 
    count = 0;
    for (i = 0; i < size; i++)
        if (!marked[i]) count++;
