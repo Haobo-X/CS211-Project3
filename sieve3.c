@@ -103,14 +103,14 @@ int main (int argc, char *argv[])
    } while (local_prime * local_prime <= n);
    
    // calculate the number of block
-   unsigned long int blockSize = 2000000;
-   unsigned long int num_block = size / blockSize;
-   if (size % blockSize) num_block++;
+   unsigned long int size_block = 2000000;
+   unsigned long int num_block = size / size_block;
+   if (size % size_block) num_block++;
    
    // let low_value be the low value of block and high_value be the high value of block
    unsigned long int orignal_low_value = low_value;
    unsigned long int orignal_high_value = high_value;
-   high_value = low_value + 2 * (blockSize - 1);
+   high_value = low_value + 2 * (size_block - 1);
    
    for (i = 0; i < size; i++) marked[i] = 0;
    
@@ -150,7 +150,7 @@ int main (int argc, char *argv[])
        } while (prime * prime <= high_value); 
        
        low_value = high_value + 2;
-       high_value = low_value + 2 * (blockSize - 1);
+       high_value = low_value + 2 * (size_block - 1);
        if (orignal_high_value < high_value)
        {   
           high_value = orignal_high_value;
