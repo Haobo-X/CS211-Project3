@@ -60,10 +60,8 @@ int main (int argc, char *argv[])
    
    // total number except even
    size = (high_value - low_value) / 2 + 1;
-   printf("1:%ld\n", size);
    
    local_prime_size = (int)sqrt((double)(n)) - 1;
-   printf("2:%ld\n", local_prime_size);
 
    /* Bail out if all the primes used for sieving are
       not all held by process 0 */
