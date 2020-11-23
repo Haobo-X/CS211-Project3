@@ -46,9 +46,9 @@ int main (int argc, char *argv[])
    high_value = 1 + (id + 1) * (n - 1) / p;
 
    // make sure low_value is odd
-   if((low_value % 2) == 0) low_value++;
+   low_value = (low_value % 2) == 0 ? low_value : low_value + 1;
    // make sure high_value is odd
-   if((high_value % 2) == 0) high_value--;
+   high_value = (high_value % 2) == 0 ? high_value : high_value - 1;
    
    // total number except even
    size = (high_value - low_value) / 2 + 1;
