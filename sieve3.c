@@ -100,7 +100,7 @@ int main (int argc, char *argv[])
    } while (local_prime * local_prime <= n);
    
    // set the size of block
-   unsigned long int size_block = 1000000;
+   unsigned long int size_block = 500000;
    // calculate the number of block
    unsigned long int num_block = size / size_block;
    num_block = ((size % size_block) == 0) ? num_block : num_block + 1;
