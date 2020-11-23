@@ -46,9 +46,9 @@ int main (int argc, char *argv[])
    printf("1:%lld\n", low_value);
    high_value = 1 + (id + 1) * (n - 1) / p;
    printf("2:%lld\n", high_value);
-   low_value = low_value + (low_value + 1) % 2;
+   if((low_value % 2) == 0) low_value++;
    printf("3:%lld\n", low_value);
-   high_value = high_value - (high_value + 1) % 2;
+   if((high_value % 2) == 0) high_value--;
    printf("4:%lld\n", high_value);
    
    size = (high_value - low_value) / 2 + 1;
