@@ -42,16 +42,23 @@ int main (int argc, char *argv[])
    /* Stop the timer */
    
    unsigned long int oddn = n / 2 - 1;  //排除1和偶数之后的总数量
+   printf("1:%ld\n", oddn);
    unsigned long int low_value_idx = id * oddn / p; //同一个processor中最小的下标
+   printf("2:%ld\n", low_value_idx);
    unsigned long int high_value_idx = -1 + (id + 1) * oddn / p; //最大的下标
+   printf("3:%ld\n", high_value_idx);
    size = high_value_idx - low_value_idx + 1; //array的大小
+   printf("4:%ld\n", size);
    low_value = 2 * low_value_idx + 3;  //array中最小的值
+   printf("5:%ld\n", low_value);
    high_value = 2 * high_value_idx + 3; //array中最大的值
+   printf("6:%ld\n", high_value);
 
    /* Bail out if all the primes used for sieving are
       not all held by process 0 */
 
    proc0_size = (oddn - 1) / p;
+   printf("7:%ld\n", proc0_size);
 
    if (proc0_size < (int) sqrt((double) oddn)) {
       if (!id) printf("Too many processes\n");
