@@ -43,23 +43,23 @@ int main (int argc, char *argv[])
    /* Add you code here  */
    
    low_value = 2 + id * (n - 1) / p;
-   printf("1:%lld\n", low_value);
    high_value = 1 + (id + 1) * (n - 1) / p;
-   printf("2:%lld\n", high_value);
+
+   // make sure low_value is odd
    if((low_value % 2) == 0) low_value++;
-   printf("3:%lld\n", low_value);
+   // make sure high_value is odd
    if((high_value % 2) == 0) high_value--;
-   printf("4:%lld\n", high_value);
    
+   // total number except even
    size = (high_value - low_value) / 2 + 1;
-   printf("5:%ld\n", size);
 
    /* Bail out if all the primes used for sieving are
       not all held by process 0 */
 
    proc0_size = (n/2 - 1) / p;
 
-   if ((2 + proc0_size) < (int) sqrt((double) n/2)) {
+   if ((2 + proc0_size) < (int) sqrt((double) n/2)) 
+   {
        if (!id) printf("Too many processes\n");
        MPI_Finalize();
        exit(1);
@@ -69,7 +69,8 @@ int main (int argc, char *argv[])
 
    marked = (char *) malloc(size);
 
-   if (marked == NULL) {
+   if (marked == NULL) 
+   {
        printf("Cannot allocate enough memory\n");
        MPI_Finalize();
        exit(1);
@@ -92,23 +93,25 @@ int main (int argc, char *argv[])
            else
            {   
               first = (low_value / prime + 1) * prime;
+              // make sure first is odd
               first = ((first - low_value) % 2) == 0 ? first : first + prime;
-              //make sure first is odd
+              // get the index of array
               first = (first - low_value) / 2;
-              /*
-              first = (prime - (low_value % prime) + low_value / prime % 2 * prime) / 2;
-              */
            }   
        }
        for (i = first; i < size; i += prime) marked[i] = 1;
-       if (!id) {
+       if (!id) 
+       {
            while (marked[++index]);
+           // get next prime
            prime = 2 * index + 3;
        }
+       // synchronized
        if (p > 1) MPI_Bcast(&prime, 1, MPI_INT, 0, MPI_COMM_WORLD);
    } while (prime * prime <= n);
    count = 0;
    for (i = 0; i < size; i++)
+       // calculate the number of prime
        if (!marked[i]) count++;
    if (p > 1)
        MPI_Reduce(&count, &global_count, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
