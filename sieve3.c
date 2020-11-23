@@ -103,7 +103,7 @@ int main (int argc, char *argv[])
    unsigned long int size_block = 1000000;
    // calculate the number of block
    unsigned long int num_block = size / size_block;
-   if (size % size_block) num_block++;
+   num_block = ((size % size_block) == 0) ? num_block : num_block + 1;
    
    unsigned long int orignal_low_value = low_value;
    unsigned long int orignal_high_value = high_value;
