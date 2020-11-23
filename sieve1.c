@@ -43,11 +43,16 @@ int main (int argc, char *argv[])
    /* Add you code here  */
    
    low_value = 2 + id * (n - 1) / p;
+   printf("1:%lld\n", low_value);
    high_value = 1 + (id + 1) * (n - 1) / p;
+   printf("2:%lld\n", high_value);
    low_value = low_value + (low_value + 1) % 2;
+   printf("3:%lld\n", low_value);
    high_value = high_value - (high_value + 1) % 2;
+   printf("4:%lld\n", high_value);
    
    size = (high_value - low_value) / 2 + 1;
+   printf("5:%ld\n", size);
 
    /* Bail out if all the primes used for sieving are
       not all held by process 0 */
