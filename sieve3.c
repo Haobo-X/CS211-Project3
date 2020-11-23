@@ -1,11 +1,3 @@
-/*
- *   Sieve of Eratosthenes
- *
- *   Programmed by Michael J. Quinn
- *
- *   Last modification: 7 September 2001
- */
-
 #include "mpi.h"
 #include <math.h>
 #include <stdio.h>
@@ -60,21 +52,24 @@ int main (int argc, char *argv[])
 
    low_value = 2 + id * (n - 1) / p;
    high_value = 1 + (id + 1) * (n - 1) / p;
-   low_value = low_value + (low_value + 1) % 2;
-   high_value = high_value - (high_value + 1) % 2;
+
+   // make sure low_value is odd
+   low_value = (low_value % 2) == 0 ? low_value : low_value + 1;
+   // make sure high_value is odd
+   high_value = (high_value % 2) == 0 ? high_value : high_value - 1;
    
+   // total number except even
    size = (high_value - low_value) / 2 + 1;
    
    local_prime_size = (int)sqrt((double)(n)) - 1;
-   // local_prime_size = (int)sqrt((double)(n)) + 1;
-   // local_prime_size = local_prime_size / 2 - 1;
 
    /* Bail out if all the primes used for sieving are
       not all held by process 0 */
 
    proc0_size = (n/2 - 1) / p;
 
-   if ((2 + proc0_size) < (int) sqrt((double) n/2)) {
+   if ((2 + proc0_size) < (int) sqrt((double) n/2)) 
+   {
        if (!id) printf("Too many processes\n");
        MPI_Finalize();
        exit(1);
@@ -85,12 +80,14 @@ int main (int argc, char *argv[])
    marked = (char *) malloc(size);
    local_prime_marked = (char *) malloc(local_prime_size);
 
-   if (marked == NULL) {
+   if (marked == NULL) 
+   {
        printf("Cannot allocate enough memory\n");
        MPI_Finalize();
        exit(1);
    }
-   
+
+   // find all prime numbers within the sqrt of n   
    for (i = 0; i < local_prime_size; i++) local_prime_marked[i] = 0;
    index = 0;
    local_prime = 2;
@@ -102,18 +99,21 @@ int main (int argc, char *argv[])
        local_prime = 2 + index;
    } while (local_prime * local_prime <= n);
    
+   // set the size of block
+   unsigned long int size_block = 1000000;
    // calculate the number of block
-   unsigned long int size_block = 2000000;
    unsigned long int num_block = size / size_block;
    if (size % size_block) num_block++;
    
-   // let low_value be the low value of block and high_value be the high value of block
    unsigned long int orignal_low_value = low_value;
    unsigned long int orignal_high_value = high_value;
+   // let low_value be the low value of block
+   low_value = low_value;
+   // let high_value be the high value of block
    high_value = low_value + 2 * (size_block - 1);
    
+   // find all prime numbers within n
    for (i = 0; i < size; i++) marked[i] = 0;
-   
    while (num_block--)
    {   
        index = 0;
@@ -132,23 +132,23 @@ int main (int argc, char *argv[])
                else
                {   
                   first = (low_value / prime + 1) * prime;
+                  // make sure first is odd
                   first = ((first - low_value) % 2) == 0 ? first : first + prime;
-                  //make sure first is odd
+                  // get the index of array
                   first = (first - low_value) / 2;
-                  /*
-                  first = (prime - (low_value % prime) + low_value / prime % 2 * prime) / 2;
-                  */
                }   
            }
            for (i = first + (low_value - orignal_low_value) / 2; i <= (high_value - orignal_low_value) / 2; i += prime) 
               marked[i] = 1;
            //if (!id) {
            while (local_prime_marked[++index]);
+           // get next prime
            prime = index + 2;
            //}
            //if (p > 1) MPI_Bcast(&prime, 1, MPI_INT, 0, MPI_COMM_WORLD);
        } while (prime * prime <= high_value); 
        
+       // calculate the low_value and high_value for next block
        low_value = high_value + 2;
        high_value = low_value + 2 * (size_block - 1);
        if (orignal_high_value < high_value)
@@ -159,6 +159,7 @@ int main (int argc, char *argv[])
    
    count = 0;
    for (i = 0; i < size; i++)
+       // calculate the number of prime
        if (!marked[i]) count++;
    if (p > 1)
        MPI_Reduce(&count, &global_count, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
