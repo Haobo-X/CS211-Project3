@@ -149,7 +149,6 @@ int main (int argc, char *argv[])
        } while (prime * prime <= high_value); 
        
        // calculate the low_value and high_value for next block
-       // orignal_low_value = low_value;
        low_value = high_value + 2;
        high_value = low_value + 2 * (size_block - 1);
        if (orignal_high_value < high_value)
