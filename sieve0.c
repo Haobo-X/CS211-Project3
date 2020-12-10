@@ -81,9 +81,9 @@ int main(int argc, char *argv[]) {
     prime = 2;
     do {
         if (prime * prime > low_value)
-            first = prime * prime - low_value;
+            first = prime * prime - low_value; /* It is the local index of the first multiple by prime in this processor. */
         else {
-            if (!(low_value % prime)) first = 0;
+            if (!(low_value % prime)) first = 0; 
             else first = prime - (low_value % prime);
         }
         for (i = first; i < size; i += prime) marked[i] = 1;
